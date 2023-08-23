@@ -3,14 +3,11 @@
 Contains the class DBStorage
 """
 
-
-
 from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
-
+from models.base_model import BaseModel, Base
 
 
 class DBStorage:
@@ -34,16 +31,16 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """query on the current database session"""
         from models.amenity import Amenity
-        from models.base_model import BaseModel, Base
         from models.city import City
         from models.place import Place
         from models.review import Review
         from models.state import State
         from models.user import User
+        from models.base_model import BaseModel, Base
         classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
-        """query on the current database session"""
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
