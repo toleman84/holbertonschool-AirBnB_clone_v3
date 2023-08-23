@@ -31,6 +31,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """doc"""
         from models.amenity import Amenity
         from models.base_model import BaseModel, Base
         from models.city import City
