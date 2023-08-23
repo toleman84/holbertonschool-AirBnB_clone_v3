@@ -31,7 +31,6 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """query on the current database session"""
         from models.amenity import Amenity
         from models.base_model import BaseModel, Base
         from models.city import City
@@ -41,7 +40,7 @@ class DBStorage:
         from models.user import User
         classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
-
+        
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
