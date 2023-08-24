@@ -59,11 +59,11 @@ def update_state(state_id):
     """Updates a State object."""
     state = request.get_json()
     if not state:
-        abort(404, description='Not a JSON')
+        abort(400, description='Not a JSON')
 
     data = storage.get("State", state_id)
     if not data:
-        abort(400)
+        abort(404)
 
     for key, value in data.items():
         if key in ['id', 'created_at', 'updated_at']:
