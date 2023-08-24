@@ -7,16 +7,19 @@ from models import storage
 from models.city import City
 
 
-@app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
-def get_cities():
+@app_views.route('/api/v1/states/<state_id>/cities', strict_slashes=False, methods=['GET'])
+def get_cities(state_id):
     """ retrieves a list of all City objects """
+    state = storage.get("State", state_id)
+    if state is None:
+        abort(404)
     cities = []
     for city in storage.all("City").values():
         cities.append(city.to_dict())
     return jsonify(cities)
 
 
-@app_views.route('/states/<string:state_id>', methods=['GET'],
+@app_views.route('/api/v1/cities/<city_id>', methods=['GET'],
                  strict_slashes=False)
 def get_city(city_id):
     """Retrieves a City object"""
