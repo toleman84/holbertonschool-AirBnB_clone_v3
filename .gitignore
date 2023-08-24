@@ -1,6 +1,0 @@
-# ignore theses files:
-test_get_count.py
-100-dump.sql
-
-# ignore .pyc
-*.pyc
