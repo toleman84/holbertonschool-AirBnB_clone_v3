@@ -19,7 +19,7 @@ def get_statess():
 @app_views.route('/states/<string:state_id>', methods=['GET'],
                  strict_slashes=False)
 def get_state(state_id):
-    """ info de un estado segun la id """
+    """information of a state according to the identification"""
     state = storage.get("State", state_id)
     if state is not None:
         return jsonify(state.to_dict())
