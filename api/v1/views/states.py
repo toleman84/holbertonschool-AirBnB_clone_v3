@@ -7,13 +7,14 @@ from api.v1.views import app_views
 from models import storage
 
 
-@app_views.route('/api/v1/states', strict_slashes=False, methods=['GET'])
+@app_views.route('/api/v1/states', defaults={"state_id": None},
+                 strict_slashes=False, methods=['GET'])
 @app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
                  methods=['GET'])
 def get_states(state_id):
     """Retrieves the list of all State objects."""
     states = storage.all('State')
-    stat = storage.all.get('State', state_id)
+    stat = storage.get('State', state_id)
 
     if state_id is None:
         return jsonify([state.to_dict() for state in states.values()])
@@ -27,7 +28,7 @@ def get_states(state_id):
                  methods=['DELETE'])
 def delete_state(state_id):
     """Deletes a State object."""
-    stat = storage.all.get('State', state_id)
+    stat = storage.get('State', state_id)
     if stat is not None:
         storage.delete(stat)
         storage.save()
@@ -44,7 +45,7 @@ def create_state():
     if not data:
         abort(400, description='Not a JSON')
 
-    if 'name' not in data:
+    if 'name' not in data.keys():
         abort(400, description='Missing name')
 
     state = State(name=data['name'])
@@ -66,9 +67,8 @@ def update_state(state_id):
         abort(404)
 
     for key, value in data.items():
-        if key in ['id', 'created_at', 'updated_at']:
-            continue
-        setattr(state, key, value)
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(data, key, value)
 
-    state.save()
-    return jsonify(state.to_dict()), 200
+    data.save()
+    return jsonify(data.to_dict()), 200
