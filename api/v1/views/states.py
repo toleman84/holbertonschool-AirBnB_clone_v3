@@ -68,7 +68,7 @@ def update_state(state_id):
     if not data:
         abort(404)
 
-    for key, value in data.items():
+    for key, value in state.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(data, key, value)
 
