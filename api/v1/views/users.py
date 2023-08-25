@@ -46,9 +46,10 @@ def create_user():
 
     if not new_user:
         abort(400, description='Not a JSON')
-
-    if 'name' not in new_user.keys():
-        abort(400, description='Missing name')
+    if 'email' not in new_user.keys():
+        abort(400, description='Missing email')
+    if 'password' not in new_user.keys():
+        abort(400, description='Missing password')        
 
     user = User(**new_user)
     user.save()
