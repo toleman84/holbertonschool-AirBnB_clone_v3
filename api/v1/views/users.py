@@ -49,7 +49,7 @@ def create_user():
     if 'email' not in new_user.keys():
         abort(400, description='Missing email')
     if 'password' not in new_user.keys():
-        abort(400, description='Missing password')        
+        abort(400, description='Missing password')
 
     user = User(**new_user)
     user.save()
