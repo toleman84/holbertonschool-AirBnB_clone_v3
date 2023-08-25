@@ -7,8 +7,7 @@ from models import storage
 from models.state import State
 
 
-@app_views.route('/api/v1/states', defaults={"state_id": None},
-                 strict_slashes=False, methods=['GET'])
+@app_views.route('/states', strict_slashes=False, methods=['GET'])
 def get_statess():
     """ retrieves a list of all state objects """
     states = []
@@ -16,7 +15,7 @@ def get_statess():
         states.append(state.to_dict())
     return jsonify(states)
 
-@app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
+@app_views.route('/states/<int:state_id>', strict_slashes=False,
                  methods=['GET'])
 def get_state(state_id):
     """Retrieves a list of one State objects."""
@@ -27,7 +26,7 @@ def get_state(state_id):
         abort(404)
 
 
-@app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
+@app_views.route('/states/<int:state_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_state(state_id):
     """Deletes a State object."""
@@ -40,7 +39,7 @@ def delete_state(state_id):
         abort(404)
 
 
-@app_views.route('/api/v1/states', strict_slashes=False, methods=['POST'])
+@app_views.route('/states', strict_slashes=False, methods=['POST'])
 def create_state():
     """Creates a new State object."""
     data = request.get_json()
@@ -57,7 +56,7 @@ def create_state():
     return make_response(jsonify(state.to_dict()), 201)
 
 
-@app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
+@app_views.route('/states/<int:state_id>', strict_slashes=False,
                  methods=['PUT'])
 def update_state(state_id):
     """Updates a State object."""
