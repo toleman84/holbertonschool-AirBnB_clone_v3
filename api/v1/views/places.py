@@ -34,7 +34,7 @@ def get_place(place_id):
     abort(404)
 
 
-@app_views.route('/place/<string:place_id>', strict_slashes=False,
+@app_views.route('/places/<string:place_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_place(place_id):
     """ Deletes a place object. """
