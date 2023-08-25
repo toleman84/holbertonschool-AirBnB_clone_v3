@@ -22,10 +22,11 @@ def get_cities(state_id):
     return jsonify(cities)
 
 
-@app_views.route('/cities/string:city_id', methods=['GET'],
+@app_views.route('/cities/<string:city_id>', methods=['GET'],
                  strict_slashes=False)
 def get_city(city_id):
     """ info de una ciudad segun la id """
+    
     city = storage.get("City", city_id)
     if city is not None:
         return jsonify(city.to_dict())
