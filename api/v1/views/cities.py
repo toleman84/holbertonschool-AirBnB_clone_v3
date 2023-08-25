@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" api endpoints para ciudades """
 
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
