@@ -4,21 +4,23 @@
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from models import storage
-from models.state import State
+from models.place import Place
 from models.user import User
 from models.city import City
 
 
-@app_views.route('/cities/string:<city_id>/places', strict_slashes=False,
-                 methods=['GET'])
+@app_views.route('/cities/<string:city_id>/places', methods=['GET'],
+                 strict_slashes=False)
 def get_places(city_id):
-    """ retrieves a list of all place objects """
+    """ obtiene places dentro de una ciudad """
 
     places = []
     city = storage.get("City", city_id)
+    if city is None:
+        abort(404)
     for place in city.places:
-        places.append(place)
-    return jsonify(pĺaces)
+        places.append(place.to_dict())
+    return jsonify(places)
 
 
 @app_views.route('/places/<string:place_id>', methods=['GET'],
@@ -41,9 +43,8 @@ def delete_place(place_id):
     if place is not None:
         storage.delete(place)
         storage.save()
-        return jsonify({}), 200
-    else:
-        abort(404)
+        return jsonify({})
+    abort(404)
 
 
 @app_views.route('/cities/<string:city_id>/places',
