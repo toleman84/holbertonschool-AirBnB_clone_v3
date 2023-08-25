@@ -1,24 +1,27 @@
 #!/usr/bin/python3
 """doc"""
 
-from models.state import State
-from flask import abort, jsonify, request
 from api.v1.views import app_views
+from flask import abort, jsonify, make_response, request
 from models import storage
+from models.state import State
 
 
 @app_views.route('/api/v1/states', defaults={"state_id": None},
                  strict_slashes=False, methods=['GET'])
+def get_statess():
+    """ retrieves a list of all state objects """
+    states = []
+    for state in storage.all("State").values():
+        states.append(state.to_dict())
+    return jsonify(states)
+
 @app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
                  methods=['GET'])
-def get_states(state_id):
-    """Retrieves the list of all State objects."""
-    states = storage.all('State')
+def get_state(state_id):
+    """Retrieves a list of one State objects."""
     stat = storage.get('State', state_id)
-
-    if state_id is None:
-        return jsonify([state.to_dict() for state in states.values()])
-    elif stat is not None:
+    if stat is not None:
         return jsonify(stat.to_dict())
     else:
         abort(404)
@@ -32,7 +35,7 @@ def delete_state(state_id):
     if stat is not None:
         storage.delete(stat)
         storage.save()
-        return jsonify({}), 200
+        return jsonify({})
     else:
         abort(404)
 
@@ -48,10 +51,10 @@ def create_state():
     if 'name' not in data.keys():
         abort(400, description='Missing name')
 
-    state = State(name=data['name'])
+    state = State(**data)
     state.save()
 
-    return jsonify(state.to_dict()), 201
+    return make_response(jsonify(state.to_dict()), 201)
 
 
 @app_views.route('/api/v1/states/<int:state_id>', strict_slashes=False,
@@ -71,4 +74,4 @@ def update_state(state_id):
             setattr(data, key, value)
 
     data.save()
-    return jsonify(data.to_dict()), 200
+    return jsonify(data.to_dict())
