@@ -13,7 +13,7 @@ app.register_blueprint(app_views)
 
 @app.teardown_appcontext
 def teardown(error):
-    """error 404"""
+    """ al cerrar el programa cerrar el storage """
     storage.close()
 
 

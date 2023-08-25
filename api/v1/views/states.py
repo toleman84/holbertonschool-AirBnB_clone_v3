@@ -15,23 +15,23 @@ def get_statess():
         states.append(state.to_dict())
     return jsonify(states)
 
-@app_views.route('/states/<int:state_id>', strict_slashes=False,
-                 methods=['GET'])
+
+@app_views.route('/states/<string:state_id>', methods=['GET'],
+                 strict_slashes=False)
 def get_state(state_id):
-    """Retrieves a list of one State objects."""
-    stat = storage.get('State', state_id)
-    if stat is not None:
-        return jsonify(stat.to_dict())
-    else:
-        abort(404)
+    """ info de un estado segun la id """
+    state = storage.get("State", state_id)
+    if state is not None:
+        return jsonify(state.to_dict())
+    abort(404)
 
 
-@app_views.route('/states/<int:state_id>', strict_slashes=False,
+@app_views.route('/states/<string:state_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_state(state_id):
     """Deletes a State object."""
-    stat = storage.get('State', state_id)
-    if stat is not None:
+    state = storage.get('State', state_id)
+    if state is not None:
         storage.delete(stat)
         storage.save()
         return jsonify({})
@@ -56,7 +56,7 @@ def create_state():
     return make_response(jsonify(state.to_dict()), 201)
 
 
-@app_views.route('/states/<int:state_id>', strict_slashes=False,
+@app_views.route('/states/<string:state_id>', strict_slashes=False,
                  methods=['PUT'])
 def update_state(state_id):
     """Updates a State object."""
