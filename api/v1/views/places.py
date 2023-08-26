@@ -34,7 +34,7 @@ def get_place(place_id):
     abort(404)
 
 
-@app_views.route('/place/<string:place_id>', strict_slashes=False,
+@app_views.route('/places/<string:place_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_place(place_id):
     """ Deletes a place object. """
@@ -55,24 +55,19 @@ def create_place(city_id):
     city = storage.get("City", city_id)
     if city is None:
         abort(404)
-
-    new_place = request.get_json()
-    if not new_place:
-        abort(400, description='Not a JSON')
-
-    if 'user_id' not in new_place.keys():
-        abort(400, description='Missing user_id')
-
-    user = storage.get("User", new_place[id])
+    if not request.get_json():
+        return make_response(jsonify({'error': 'Not a JSON'}), 400)
+    kwargs = request.get_json()
+    if 'user_id' not in kwargs:
+        return make_response(jsonify({'error': 'Missing user_id'}), 400)
+    user = storage.get("User", kwargs['user_id'])
     if user is None:
         abort(404)
-
-    if 'name' not in data.keys():
-        abort(400, description='Missing name')
-
-    place = Place(**new_place)
+    if 'name' not in kwargs:
+        return make_response(jsonify({'error': 'Missing name'}), 400)
+    kwargs['city_id'] = city_id
+    place = Place(**kwargs)
     place.save()
-
     return make_response(jsonify(place.to_dict()), 201)
 
 
