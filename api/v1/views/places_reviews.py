@@ -9,15 +9,15 @@ from models.review import Review
 from models.user import User
 
 
-@app_views.route('/places/<string:place_id>/reviews', strict_slashes=False,
-                 methods=['GET'])
+@app_views.route('/places/<string:place_id>/reviews', methods=['GET'],
+                 strict_slashes=False)
 def get_reviews(place_id):
-    """ retrieves a list of all review objects in a place """
+    """ todas las reviews segun place """
 
-    reviews = []
-    place = storage.get("Place", pĺace_id)
+    place = storage.get("Place", place_id)
     if place is None:
         abort(404)
+    reviews = []
     for review in place.reviews:
         reviews.append(review.to_dict())
     return jsonify(reviews)
@@ -34,17 +34,17 @@ def get_review(review_id):
     abort(404)
 
 
-@app_views.route('/reviews/<string:review_id>', strict_slashes=False,
-                 methods=['DELETE'])
+@app_views.route('/reviews/<string:review_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_review(review_id):
-    """ Deletes a review object. """
+    """ borra una review """
 
-    review = storage.get('Review', review_id)
-    if review is not None:
-        storage.delete(review)
-        storage.save()
-        return jsonify({})
-    abort(404)
+    review = storage.get("Review", review_id)
+    if review is None:
+        abort(404)
+    review.delete()
+    storage.save()
+    return (jsonify({}))
 
 
 @app_views.route('/places/<string:place_id>/reviews',
