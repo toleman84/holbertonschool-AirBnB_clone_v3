@@ -53,7 +53,6 @@ class DBStorage:
                 for obj in self.__session.query(cls):
                     objects[obj.__class__.__name__ + '.' + obj.id] = obj
         return objects
-        
 
     def new(self, obj):
         """add the object to the current database session"""
@@ -81,8 +80,7 @@ class DBStorage:
 
     def get(self, cls, id):
         """returns the object based on the class and its ID"""
-        if type(cls) is str  and type(id) is str\
-           and cls in classes:
+        if type(cls) is str and type(id) is str and cls in classes:
             cls = classes[cls]
             return self.__session.query(cls).filter(cls.id == id).first()
         return None
