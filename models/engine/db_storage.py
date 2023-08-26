@@ -42,18 +42,14 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
-
-        objects = {}
-        if type(cls) == str:
-            cls = classes[cls]
-        if cls:
-            for obj in self.__session.query(cls):
-                objects[obj.__class__.__name__ + '.' + obj.id] = obj
-        else:
-            for cls in classes.values():
-                for obj in self.__session.query(cls):
-                    objects[obj.__class__.__name__ + '.' + obj.id] = obj
-        return objects
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         """add the object to the current database session"""
@@ -80,15 +76,11 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls, id):
-        """ gets an instance of an object from the db """
-
-        if cls is not None and type(cls) is str and id is not None and\
-           type(id) is str and cls in classes:
-            cls = classes[cls]
-            result = self.__session.query(cls).filter(cls.id == id).first()
-            return result
-        else:
-            return None
+        """returns the object based on the class and its ID"""
+        for obj in self.all(cls).values():
+            if obj.id == id:
+                return obj
+        return None
 
     def count(self, cls=None):
         """returns number of objects in storage matching the given class"""
